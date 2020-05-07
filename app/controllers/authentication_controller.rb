@@ -6,7 +6,7 @@ class AuthenticationController < ApplicationController
     command = AuthenticateUser.call(params[:email], params[:password])
 
     if command.success?
-      render json: { auth_token: command.result }
+      render json: { auth_token: command.result }, status: :ok
     else
       render json: { error: command.errors }, status: :unauthorized
     end
@@ -15,10 +15,11 @@ class AuthenticationController < ApplicationController
   def register
     @user = User.create(user_params)
     if @user.save
-      response = { message: 'User created successfully' }
+      command = AuthenticateUser.call(params[:email], params[:password])
+      response = { message: 'User created successfully', auth_token: command.result }
       render json: response, status: :created
     else
-      render json: @user.errors, status: :bad
+      render json: @user.errors, status: :bad_request
     end
   end
 
@@ -29,7 +30,7 @@ class AuthenticationController < ApplicationController
         :first_name,
         :last_name,
         :email,
-        :password
+        :password,
     )
   end
 end
