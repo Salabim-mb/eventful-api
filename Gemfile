@@ -49,3 +49,5 @@ gem 'bcrypt', '~> 3.1.7'
 gem 'jwt'
 # Enabling private controller methods
 gem 'simple_command'
+
+gem 'rack-cors', :require => 'rack/cors'
